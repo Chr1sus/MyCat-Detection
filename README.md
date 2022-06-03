@@ -11,7 +11,7 @@ Sistema embebido de control de apertura de la puerta de garaje a partir de la de
         |---->Poky
 
 
------->CarplateDetector
+------>MyCatDetector
         |---->
 
 
