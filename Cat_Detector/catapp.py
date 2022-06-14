@@ -28,7 +28,7 @@ def open_Door():
         time.sleep(0.5)
         duty = duty + 1
 
-    time.sleep(5)
+    time.sleep(15)
     i = 8
     while True:
         servo1.ChangeDutyCycle(i)
@@ -51,6 +51,7 @@ cat_dict = {0: "Hormiguita", 1: "Jandi", 2: "Koneko", 3: "Lin", 4: "Macho"}
 
 # start the webcam feed
 cap = cv2.VideoCapture(0)
+count  = 0
 while True:
     # Find haar cascade to draw bounding box around face
     ret, frame = cap.read()
@@ -59,7 +60,7 @@ while True:
     facecasc = cv2.CascadeClassifier('cat.xml')
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = facecasc.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5, minSize=(100, 100))
-
+     
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y - 50), (x + w, y + h + 10), (255, 0, 0), 2)
         roi_gray = gray[y:y + h, x:x + w]
@@ -74,7 +75,12 @@ while True:
         maxindex = int(np.argmax(output_data_tflite, axis=1))
 
         if cat_dict[maxindex] == "Jandi" or cat_dict[maxindex] == "Koneko":
-            open_Door()
+            count += 1
+            if count == 25:
+                open_Door()
+                count = 0
+        else:
+            count = 0
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
